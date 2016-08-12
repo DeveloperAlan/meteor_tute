@@ -1,8 +1,13 @@
 import { Template } from 'meteor/templating';
+import { ReactiveDict } from 'meteor/reactive-dict';
 import { Tasks } from '../api/tasks.js';
 
 import './body.html';
 import "./task.js";
+
+Template.body.onCreated(function bodyOnCreated() {
+    this.state = new ReactiveDict();
+});
 
 Template.body.helpers({
     tasks() {
@@ -23,5 +28,8 @@ Template.body.events({
         });
 
         target.text.value = '';
+    },
+    'change .hide-completed input'(event, instance) {
+        instance.state.set('hideCompleted', event.target.checked);
     }
 });
