@@ -11,7 +11,14 @@ Template.body.onCreated(function bodyOnCreated() {
 
 Template.body.helpers({
     tasks() {
-        return Tasks.find({}, { sort: { createdAt: -1 } });
+        const instance = Template.instance();
+        if (instance.state.get('hideCompleted')) {
+            return Tasks.find({ checked: { $ne: true}}, { sort: { createdAt: -1}});
+        }
+        return Tasks.find({}, { sort: { createdAt: -1}});
+    },
+    incompletedCount() {
+        return Tasks.find({ checked: { $ne: true}}).count();
     }
 });
 
