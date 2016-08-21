@@ -4,10 +4,16 @@ import { check } from 'meteor/check';
 
 export const Tasks = new Mongo.Collection('tasks');
 
+if (Meteor.isServer) {
+  Meteor.publish('tasks', function taskPublication() {
+    return Tasks.find();
+  });
+}
+
 Meteor.methods({
     'tasks.insert'(text) {
         check(text, String);
-        
+
         if (! this.userId) {
             throw new Meteor.Error('not-authorized');
         }
